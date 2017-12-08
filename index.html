@@ -8,6 +8,9 @@
 <link href="images/logo.ico" type=image/x-icon rel="shortcut icon" />
 <link href="css/base.css" rel="stylesheet">
 <link href="css/index.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/banana/normalize.css" />
+<!--<link rel="stylesheet" type="text/css" href="css/banana/demo.css">-->
+<link rel="stylesheet" href="css/banana/style.css">
 <!--[if lt IE 9]>
 <script src="js/modernizr.js"></script>
 <![endif]-->
@@ -18,36 +21,123 @@
   <div class="logo" data-scroll-reveal="enter right over 1s"><a href="/"><img src="images/logo.png"></a></div>
   <nav class="topnav" data-scroll-reveal="enter bottom over 1s after 1s"><a href="index.html"><span>首页</span><span class="en">Home</span></a><a href="about.html"><span>关于我</span><span class="en">About</span></a><a href="manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="gbook.html"><span>留言</span><span class="en">Saying</span></a></nav>
 </header>
+<div class="htmleaf-container">
+		
 <article>
+	
   <div class="container">
-    <div class="blog" data-scroll-reveal="enter top" >
-      <!--<figure>
+	<div class="carousel" data-gap="20" data-bfc>
+		<figure>
+			<img src="images/banana/banana1.jpg" alt="">
+			<img src="images/banana/banana2.png" alt="">
+			<img src="images/banana/banana3.png" alt="">
+			<img src="images/banana/banana4.png" alt="">
+			<img src="images/banana/banana5.jpg" alt="">
+			<img src="images/banana/banana5.jpg" alt="">
+		</figure>
+		<nav>
+			<button class="nav prev">Prev</button>
+			<button class="nav next">Next</button>
+		</nav>
+	</div>
+	<script type="text/javascript">
+	'use strict';
+
+	window.addEventListener('load', function () {
+		var carousels = document.querySelectorAll('.carousel');
+		for (var i = 0; i < carousels.length; i++) {
+			carousel(carousels[i]);
+			
+		}
+	});
+
+	function carousel(root) {
+		var figure = root.querySelector('figure'),
+			nav = root.querySelector('nav'),
+			images = figure.children,
+			n = images.length,
+			gap = root.dataset.gap || 0,
+			bfc = 'bfc' in root.dataset,
+			theta = 2 * Math.PI / n,
+			currImage = 0;
+		setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
+		window.addEventListener('resize', function () {
+			setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
+		});
+
+		setupNavigation();
+
+		function setupCarousel(n, s) {
+
+			var apothem = s / (2 * Math.tan(Math.PI / n));
+
+			figure.style.transformOrigin = '50% 50% ' + -apothem + 'px';
+
+			for (var i = 0; i < n; i++) {
+				images[i].style.padding = gap + 'px';
+			}for (i = 1; i < n; i++) {
+				images[i].style.transformOrigin = '50% 50% ' + -apothem + 'px';
+				images[i].style.transform = 'rotateY(' + i * theta + 'rad)';
+			}
+			if (bfc) for (i = 0; i < n; i++) {
+				images[i].style.backfaceVisibility = 'hidden';
+			}rotateCarousel(currImage);
+		}
+
+		function setupNavigation() {
+			nav.addEventListener('click', onClick, true);
+
+			function onClick(e) {
+				e.stopPropagation();
+			
+				var t = e.target;
+				if (t.tagName.toUpperCase() != 'BUTTON') return;
+
+				if (t.classList.contains('next')) {
+					currImage++;
+				} else {
+					currImage--;
+				}
+
+				rotateCarousel(currImage);
+			}
+		}
+
+		function rotateCarousel(imageIndex) {
+			figure.style.transform = 'rotateY(' + imageIndex * -theta + 'rad)';
+		}
+	}
+</script>
+    <!-- <div class="blog" data-scroll-reveal="enter top" >
+      <figure>
         <ul>
           <a href="/"><img src="images/t01.jpg"><span>下载个人博客模板</span></a>
         </ul>
         <p><a href="/">灯具公司复古风格PSD设计稿</a></p>
         <figcaption>此模板为PSD设计稿，复古风格。首页主要突出产品，以及公司简介。手绘灯作为头部背景图片，这个比较特别。html可以做出灯一闪一闪的效果，或者说旁边有个按钮...</figcaption>
-      </figure>-->
-    </div>
-   <ul class="cbp_tmtimeline">
-                   <li>
-					<time class="cbp_tmtime"><span>12-07</span> <span>2017</span></time>
-					<div class="cbp_tmicon"></div>
-					<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s" >
-					  <h2>搭建博客</h2>
-					  <p><span class="blogpic"><a href="/"><img src="images/t03.jpg"></a></span>搭建博客之路...</p>
-					  <a href="/" target="_blank" class="readmore">阅读全文&gt;&gt;</a> </div>
-				  </li>
-				  <li>
-					<time class="cbp_tmtime" ><span>12-04</span> <span>2017</span></time>
-					<div class="cbp_tmicon"></div>
-					<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s" >
-					  <h2>阅读sdk源码体会</h2>
-					  <p><span class="blogpic"><a href="/"><img src="images/t03.jpg"></a></span>通过查阅了一篇文章，给啦我学习代码的思路，从底层入手，了解构建他们的原理...</p>
-					  <a href="/" target="_blank" class="readmore">阅读全文&gt;&gt;</a> </div>
-				  </li>
+      </figure>
+    </div>-->
+
+
+  <ul class="cbp_tmtimeline">
+      <li>
+		<time class="cbp_tmtime"><span>12-07</span> <span>2017</span></time>
+		<div class="cbp_tmicon"></div>
+		 <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s" >
+			<h2>搭建博客</h2>
+		  <p><span class="blogpic"><a href="/"><img src="images/t03.jpg"></a></span>搭建博客之路...</p>
+		 <a href="/" target="_blank" class="readmore">阅读全文&gt;&gt;</a> </div>
+	 </li>
+	<li>
+		<time class="cbp_tmtime" ><span>12-04</span> <span>2017</span></time>
+		<div class="cbp_tmicon"></div>
+		<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s" >
+		 <h2>阅读sdk源码体会</h2>
+		  <p><span class="blogpic"><a href="/"><img src="images/t03.jpg"></a></span>通过查阅了一篇文章，给啦我学习代码的思路，从底层入手，了解构建他们的原理...</p>
+		 <a href="/" target="_blank" class="readmore">阅读全文&gt;&gt;</a> </div>
+	</li>
 					
-				</ul>
+	</ul>
   </div>
 </article>
 <footer>
