@@ -8,12 +8,45 @@
 <link href="images/logo.ico" type=image/x-icon rel="shortcut icon" />
 <link href="css/base.css" rel="stylesheet">
 <link href="css/learn.css" rel="stylesheet">
+
+<link href="css/lrtk.css" media="screen" rel="stylesheet" type="text/css">
+<script src="http://www.jq22.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.classm.js"></script>
 <!--[if lt IE 9]>
 <script src="js/modernizr.js"></script>
 <![endif]-->
 <script src="js/scrollReveal.js"></script>
+<script type="text/javascript">
+
+$(function(){
+
+	$.classM({	
+
+		/*
+
+		自定义
+
+		content 里面插入的内容，直接写HTML 例:content:"<div>要显示的内容</div>"
+
+		width 背景的宽 例：width:200
+
+		height 背景的高 例：height:200
+
+		background 背景的路径	 例：background:"1.gif"
+
+		time 鼠标按下的时长 例：200
+
+		animateTime 显示与隐藏时的动画效果 例：200
+
+		*/		
+
+	});
+
+}) 
+
+</script>
 </head>
-<body>
+<body onselectstart="return false">
 <header>
   <div class="logo" data-scroll-reveal="enter right over 1s"><a href="/"><img src="images/logo.png"></a></div>
   <nav class="topnav" data-scroll-reveal="enter bottom over 1s after 1s"><a href="home.html"><span>首页</span><span class="en">Home</span></a><a href="about.html"><span>关于我</span><span class="en">About</span></a><a href="manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="gbook.html"><span>留言</span><span class="en">Saying</span></a></nav>
