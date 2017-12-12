@@ -8,7 +8,7 @@
 	//ClassM
 	$.classM = function(options){
 		var defaults = {
-			content:"<div class='classM'><a href='http://www.jq22.com/' target='_blank' class='M_1'></a><a href='#' target='_blank' class='M_2'></a><a href='javascript:;' class='M_3'></a><a href='#' target='_blank' class='M_4'></a></div>",//Content
+			content:"<div class='classM'><a href='http://www.jq22.com/' target='_blank' class='M_1'></a><a href='other/love/index.html' target='_blank' class='M_2'></a><a href='javascript:;' class='M_3'></a><a href='#' target='_blank' class='M_4'></a></div>",//Content
 			width:388,//this Tip Width
 			height:93,//this Tip Height
 			background:"images/bg.png",//this Tip Background
