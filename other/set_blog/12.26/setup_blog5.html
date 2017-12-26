@@ -35,17 +35,104 @@
 		<p><img src="img/simple.png" alt="图片1" width="700" /></p>
 		<p>说明客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
 		<h3>Manager类</h3>
-		<p></p>
+		<p>public class Manager {<br>
+			private HashMap<Object, Object> showcase = new HashMap<>();<br>
+			public void register(String name,Product poto) {//注册对象<br>
+				showcase.put(name, poto);<br>
+			}<br>
+			public Product create(String potoname) {<br>
+				Product p = (Product)showcase.get(potoname);<br>
+				return p.createClone();//返回 对应子类 对象的实例<br>
+			}<br>
+		}<br>
+</p>
 		<h3>Product类</h3>
-		<p></p>
+		<p>public interface Product extends Cloneable{<br>
+		   public abstract void use(String s);//实例的使用方法<br>
+			public abstract Product createClone();//生成副本方法<br>
+		}<br>
+		</p>
 		<h3>UderlinePen类</h3>
-		<p></p>
+		<p>public class UnderlinePen implements Product{<br>
+				private char ulchar;<br>
+				public UnderlinePen(char ulchar) {<br>
+					this.ulchar = ulchar;<br>
+				}<br>
+				@Override<br>
+				public void use(String s) {<br>
+					int length = s.getBytes().length;<br>
+					System.out.println("\""+s+"\"");<br>
+					System.out.print("");<br>
+					for(int i=0;i<(length+4);i++) {<br>
+						System.out.print(ulchar);<br>
+					}<br>
+					System.out.println("");<br>
+				}<br>
+
+				@Override<br>
+				public Product createClone() {<br>
+					Product p = null;<br>
+					try {<br>
+						p=(Product)clone();<br>
+					}catch (CloneNotSupportedException e) {<br>
+						// TODO: handle exception<br>
+						e.printStackTrace();<br>
+					}<br>
+					return p;<br>
+				}<br>
+			}<br></p>
 		<h3>MessageBox类</h3>
-		<p></p>
+		<p>public class MessageBox implements Product{<br>
+				private char decochar;<br>
+				public MessageBox(char decochar) {<br>
+					this.decochar = decochar;<br>
+				}<br>
+				@Override<br>
+				public void use(String s) {<br>
+					int length = s.getBytes().length;<br>
+					for(int i=0;i<=(length+4);i++) {<br>
+						System.out.print(decochar);<br>
+					}<br>
+					System.out.println(" ");<br>
+					System.out.println(decochar+ " " + s + " " + decochar);<br>
+					for(int i=0;i<length+4;i++) {<br>
+						System.out.print(decochar);<br>
+					}<br>
+					System.out.println("");<br>
+				}<br>
+				@Override<br>
+				public Product createClone() {<br>
+					Product p = null;<br>
+					try {<br>
+						p=(Product)clone();<br>
+					}catch (CloneNotSupportedException e) {<br>
+						// TODO: handle exception<br>
+						e.printStackTrace();<br>
+					}<br>
+					return p;<br>
+				}<br>
+			}<br></p>
 		<h3>Main类</h3>
-		<p></p>
+		<p>public static void main(String[] args) {<br>
+			//准备<br>
+			Manager manager = new Manager();<br>
+			UnderlinePen upen = new UnderlinePen('~');<br>
+			MessageBox mbox = new MessageBox('*');<br>
+			MessageBox sbox = new MessageBox('/');<br>
+			manager.register("strong message", upen);//将对象和键id注册到manager中管理<br>
+			manager.register("warning box", mbox);<br>
+			manager.register("slash box", sbox);<br>
+			
+			//生成<br>
+			Product p1 = manager.create("strong message");//通过对应的key进行创建子类<br>
+			p1.use("1:Hello,word.");//实现子类的调用<br>
+			Product p2 = manager.create("warning box");<br>
+			p2.use("2:Hello,word.");<br>
+			Product p3 = manager.create("slash box");<br>
+			p3.use("3:Hello,word.");<br>
+		}<br></p>
 		<h3>输出结果</h3>
-		<p><img src="img/.png" alt="图片2" width="700"></img></p>
+		<p><img src="img/end.png" alt="图片2" ></img></p>
 		<p>如上，我们是通过在client中的对实例模板的register对方法进行注册后，通过create方法获取到实例子类的实现，得以创建出这个实例的"副本"，最后调用use方法调用自身的具体实现，实现复制的。这个模式的好处就是不用让我们频繁的通过new进行创建实例，而是通过clone方法实现此类的克隆。因为克隆一个原型就类似于实例化一个类。但是，这个模式的需要一个全局的掌控，这也是需要我们去探索去联系的。</p>
     <div class="keybq">
 	<p><span>关键字词</span>：设计模式、prototype、克隆</p>    
