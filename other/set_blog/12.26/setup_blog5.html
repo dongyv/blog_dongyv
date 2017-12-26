@@ -33,7 +33,7 @@
 		<h3>结构</h3>
 		<p>&nbsp;&nbsp;&nbsp;prototype模式是设计一个实例模板，以便于实例的复制。之后创建新的实例就不用再依赖于new关键字，实质是通过java中Cloneable接口中的clone方法创建实例的副本。</p>
 		<p><img src="img/simple.png" alt="图片1" width="700" /></p>
-		<p>说明客户端程序(Manager)依赖于抽象实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于抽象的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
+		<p>说明客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
 		<h3>Manager类</h3>
 		<p></p>
 		<h3>Product类</h3>
@@ -45,9 +45,10 @@
 		<h3>Main类</h3>
 		<p></p>
 		<h3>输出结果</h3>
-		<p></p>
+		<p><img src="img/.png" alt="图片2" width="700"></img></p>
+		<p>如上，我们是通过在client中的对实例模板的register对方法进行注册后，通过create方法获取到实例子类的实现，得以创建出这个实例的"副本"，最后调用use方法调用自身的具体实现，实现复制的。这个模式的好处就是不用让我们频繁的通过new进行创建实例，而是通过clone方法实现此类的克隆。因为克隆一个原型就类似于实例化一个类。但是，这个模式的需要一个全局的掌控，这也是需要我们去探索去联系的。</p>
     <div class="keybq">
-	<p><span>关键字词</span>：设计模式、prototype</p>    
+	<p><span>关键字词</span>：设计模式、prototype、克隆</p>    
    
 <div class="gbko">
 <!--高速版-->
