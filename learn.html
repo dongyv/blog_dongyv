@@ -16,35 +16,12 @@
 <script src="js/modernizr.js"></script>
 <![endif]-->
 <script src="js/scrollReveal.js"></script>
-<script type="text/javascript">
 
-$(function(){
+<link rel="stylesheet" type="text/css" href="css/newfy/book.css">
+	<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/newfy/book.js"></script>
 
-	$.classM({	
 
-		/*
-
-		自定义
-
-		content 里面插入的内容，直接写HTML 例:content:"<div>要显示的内容</div>"
-
-		width 背景的宽 例：width:200
-
-		height 背景的高 例：height:200
-
-		background 背景的路径	 例：background:"1.gif"
-
-		time 鼠标按下的时长 例：200
-
-		animateTime 显示与隐藏时的动画效果 例：200
-
-		*/		
-
-	});
-
-}) 
-
-</script>
 </head>
 <body onselectstart="return false">
 <header>
@@ -64,7 +41,45 @@ $(function(){
         <li><a href="/jstt/t/">推荐公众号</a></li>
       </ul>
     </div>
-	<div id="viewDiv"></div>
+	
+	<section id="knowledge" class="viewBlock">
+		<div class="bookBox">
+			<a class="lastBtn"><</a>
+			<a class="nextBtn">></a>
+			<div class="bookPage frist">
+				<img src="images/newfy/dataImg1.png" />
+			</div>
+			<div class="bookPage runPage">
+				<div class="bookWord">
+					<span>Glacier</span> red in the glacier.
+					<span class="pageNumber">1</span>
+				</div>
+				<img src="images/newfy/dataImg2.png" />	
+			</div>
+			<div class="bookPage runPage">
+				<div class="bookWord">				
+					<span>Surface</span>  water supply, the .
+					<span class="pageNumber">2</span>
+				</div>
+				<img src="images/newfy/dataImg3.png" />
+			</div>
+			<div class="bookPage runPage">
+				<div class="bookWord">
+					<span>Groundwater</span>itions, good .
+					<span class="pageNumber">3</span>
+				</div>
+				<img src="images/newfy/dataImg4.png" />
+			</div>
+			<div class="bookPage last">
+				<div class="bookWord">
+					<span>Ocean</span>nts for only 2%.</span>
+					<span class="pageNumber">4</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!--<div id="viewDiv"></div>
 		<script>
 			$(document).ready(function(){
 				 
@@ -72,7 +87,7 @@ $(function(){
 				 
 				})
 		</script>
-	</div>
+	</div>-->
  
 </article>
 <footer> Design by DanceSmile </footer>
