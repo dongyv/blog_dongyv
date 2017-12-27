@@ -12,7 +12,7 @@ a:hover { text-decoration: none; color: #fff; }
 .f_l { float: left }
 .f_r { float: right }
 /* header */
-header, article, footer { width: 1000px; margin: auto; overflow: hidden }
+header, article, footer { width: 1040px; margin: auto; overflow: hidden }
 .logo { margin: 40px 0 }
 nav { margin-bottom: 40px }
 nav a { position: relative; display: inline-block; font-size: 24px; margin-right: 30px }
