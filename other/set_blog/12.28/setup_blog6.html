@@ -36,13 +36,104 @@
 		<p>代理模式的关键点就在于，目标对象和代理对象都实现对象的接口，同时，目标对象是代理对象的拓展，目标函数需要代理函数进行实现。</p>
 		<h2>静态代理</h2>
 		<h3>Printable类</h3>
-		<p></p>
+		<p>public interface Printable {<br>
+			public abstract void setPrinterName(String name);//设置名字<br>
+			public abstract String getPrinterName();//获取名字<br>
+			public abstract void print(String string);//显示文字（打印）<br>
+		}<br>
+		</p>
 		<h3>Printer类</h3>
-		<p></p>
+		<p>public class Printer implements Printable{<br>
+			private String name;<br>
+			public Printer() {<br>
+				heavyJob("正在生成Printer的实例");<br>
+			}<br>
+			
+			public Printer(String name) {<br>
+				this.name = name;<br>
+				heavyJob("正在生成Printer的实例("+name+")");<br>
+			}<br>
+			
+			public void print(String string) {<br>
+				System.out.println("=== "+name + "=== ");<br>
+				System.out.println(string);<br>
+			}<br>
+			
+			private void heavyJob(String msg) {<br>
+				System.out.println(msg);<br>
+				for(int i=0;i<5;i++) {<br>
+					try {<br>
+						Thread.sleep(1000);<br>
+					} catch (InterruptedException e) {<br>
+						e.printStackTrace();<br>
+					}<br>
+					System.out.print(".");<br>
+				}<br>
+				System.out.println("结束.");<br>
+			}<br>
+
+			@Override<br>
+			public void setPrinterName(String name) {<br>
+				
+				this.name = name;<br>
+			}<br>
+
+			@Override<br>
+			public String getPrinterName() {<br>
+				
+				return name;<br>
+			}<br>
+		}<br></p>
 		<h3>PrinterProxy类</h3>
-		<p></p>
+		<p>public class PrinterProxy implements Printable{<br>
+			private String name;//名字<br>
+			private Printer real;//本人<br>
+			
+			public PrinterProxy() {<br>
+				
+			}<br>
+			
+			public PrinterProxy(String name) {<br>
+				this.name = name;<br>
+			}<br>
+			@Override<br>
+			public synchronized void setPrinterName(String name) {<br>
+				
+				if(real != null) {<br>
+					real.setPrinterName(name);//设置本人名字<br>
+				}
+				this.name = name;<br>
+			}
+
+			@Override
+			public  String getPrinterName() {<br>
+				
+				return name;<br>
+			}<br>
+
+			@Override<br>
+			public void print(String string) {<br>
+				
+				realize();<br>
+				real.print(string);//具体调用了，本人的打印方法<br>
+			}<br>
+			
+			private synchronized void realize() {<br>
+				if(real == null) {<br>
+					real = new Printer(name);<br>
+				}<br>
+			}<br>
+		}<br></p>
 		<h3>Main类</h3>
-		<p></p>
+		<p>public class Main {<br>
+			public static void main(String[] args) {<br>
+				Printable p = new PrinterProxy("dongyv");<br>
+				System.out.println("现在打印的是："+p.getPrinterName());<br>
+				p.setPrinterName("xia");<br>
+				System.out.println("现在打印的是："+p.getPrinterName());<br>
+				p.print("xiadongyv");<br>
+			}<br>
+		}<br></p>
 		<h3>输出结果</h3>
 		<p><img src="img/end.png" alt="图片2" ></img></p>
 		<p>上面静态代理的例子中，代理类是自己定义好的，在程序运行之前就已经编译完成。如果出现问题，那么就需要维护俩套内容。动态代理，则可以解决上述问题</p>
@@ -83,7 +174,22 @@
 		}<br>
 		</p>
 		<h3>Main类</h3>
-		<p></p>
+		<p> public static void main(String[] args) {<br>
+	        // 目标对象<br>
+	        Printable target = new Printer();<br>
+	        // 【原始的类型 class cn.itcast.b_dynamic.UserDao】<br>
+	        System.out.println(target.getClass());<br>
+
+	        // 给目标对象，创建代理对象<br>
+	        Printable proxy = (Printable) new ProxyFactory(target).getProxyInstance();<br>
+	        // class $Proxy0   内存中动态生成的代理对象<br>
+	        System.out.println(proxy.getClass());<br>
+
+	        // 执行方法   【代理对象】<br>
+	        proxy.print("dongyu");<br>
+	    }<br></p>
+		<h3>输出结果</h3>
+		<p><img src="img/end1.png" alt="图片3" ></img></p>
 		<p>代理对象不需要实现接口,但是目标对象一定要实现接口,否则不能用动态代理。对应这个子类的实现方法，还有一个代理的方式叫做:Cglib代理。这里也不做阐述(持续学习中)。继续努力，加油。</p>
     <div class="keybq">
 	<p><span>关键字词</span>：设计模式、proxy、代理</p>    
