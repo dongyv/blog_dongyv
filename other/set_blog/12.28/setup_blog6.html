@@ -37,102 +37,102 @@
 		<h2>静态代理</h2>
 		<h3>Printable类</h3>
 		<p>public interface Printable {<br>
-			public abstract void setPrinterName(String name);//设置名字<br>
-			public abstract String getPrinterName();//获取名字<br>
-			public abstract void print(String string);//显示文字（打印）<br>
+			&nbsp;&nbsp;public abstract void setPrinterName(String name);//设置名字<br>
+			&nbsp;&nbsp;public abstract String getPrinterName();//获取名字<br>
+			&nbsp;&nbsp;public abstract void print(String string);//显示文字（打印）<br>
 		}<br>
 		</p>
 		<h3>Printer类</h3>
 		<p>public class Printer implements Printable{<br>
-			private String name;<br>
-			public Printer() {<br>
-				heavyJob("正在生成Printer的实例");<br>
-			}<br>
+			&nbsp;&nbsp;private String name;<br>
+			&nbsp;&nbsp;public Printer() {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;heavyJob("正在生成Printer的实例");<br>
+			&nbsp;&nbsp;}<br>
 			
 			public Printer(String name) {<br>
-				this.name = name;<br>
-				heavyJob("正在生成Printer的实例("+name+")");<br>
+				&nbsp;&nbsp;this.name = name;<br>
+				&nbsp;&nbsp;heavyJob("正在生成Printer的实例("+name+")");<br>
 			}<br>
 			
 			public void print(String string) {<br>
-				System.out.println("=== "+name + "=== ");<br>
-				System.out.println(string);<br>
+				&nbsp;&nbsp;System.out.println("=== "+name + "=== ");<br>
+				&nbsp;&nbsp;System.out.println(string);<br>
 			}<br>
 			
 			private void heavyJob(String msg) {<br>
-				System.out.println(msg);<br>
-				for(int i=0;i<5;i++) {<br>
-					try {<br>
-						Thread.sleep(1000);<br>
-					} catch (InterruptedException e) {<br>
-						e.printStackTrace();<br>
-					}<br>
-					System.out.print(".");<br>
-				}<br>
-				System.out.println("结束.");<br>
+				&nbsp;&nbsp;System.out.println(msg);<br>
+				&nbsp;&nbsp;for(int i=0;i<5;i++) {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	try {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	Thread.sleep(1000);<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	} catch (InterruptedException e) {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		e.printStackTrace();<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}<br>
+				&nbsp;&nbsp;	System.out.print(".");<br>
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;System.out.println("结束.");<br>
 			}<br>
 
 			@Override<br>
 			public void setPrinterName(String name) {<br>
 				
-				this.name = name;<br>
+			&nbsp;&nbsp;	this.name = name;<br>
 			}<br>
 
 			@Override<br>
 			public String getPrinterName() {<br>
 				
-				return name;<br>
+			&nbsp;&nbsp;	return name;<br>
 			}<br>
 		}<br></p>
 		<h3>PrinterProxy类</h3>
 		<p>public class PrinterProxy implements Printable{<br>
-			private String name;//名字<br>
-			private Printer real;//本人<br>
+			&nbsp;&nbsp;private String name;//名字<br>
+			&nbsp;&nbsp;private Printer real;//本人<br>
 			
-			public PrinterProxy() {<br>
+			&nbsp;&nbsp;public PrinterProxy() {<br>
 				
-			}<br>
+			&nbsp;&nbsp;}<br>
 			
-			public PrinterProxy(String name) {<br>
-				this.name = name;<br>
-			}<br>
-			@Override<br>
-			public synchronized void setPrinterName(String name) {<br>
+			&nbsp;&nbsp;public PrinterProxy(String name) {<br>
+			&nbsp;&nbsp;	this.name = name;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public synchronized void setPrinterName(String name) {<br>
 				
-				if(real != null) {<br>
-					real.setPrinterName(name);//设置本人名字<br>
-				}
-				this.name = name;<br>
-			}
+			&nbsp;&nbsp;	if(real != null) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;		real.setPrinterName(name);//设置本人名字<br>
+			&nbsp;&nbsp;	}
+			&nbsp;&nbsp;	this.name = name;<br>
+			&nbsp;&nbsp;}<br>
 
 			@Override<br>
 			public  String getPrinterName() {<br>
 				
-				return name;<br>
-			}<br>
+			&nbsp;&nbsp;	return name;<br>
+			&nbsp;&nbsp;}<br>
 
-			@Override<br>
-			public void print(String string) {<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void print(String string) {<br>
 				
-				realize();<br>
-				real.print(string);//具体调用了，本人的打印方法<br>
-			}<br>
+			&nbsp;&nbsp;	realize();<br>
+			&nbsp;&nbsp;	real.print(string);//具体调用了，本人的打印方法<br>
+			&nbsp;&nbsp;}<br>
 			
-			private synchronized void realize() {<br>
-				if(real == null) {<br>
-					real = new Printer(name);<br>
-				}<br>
-			}<br>
-		}<br></p>
+			&nbsp;&nbsp;private synchronized void realize() {<br>
+			&nbsp;&nbsp;	if(real == null) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;		real = new Printer(name);<br>
+			&nbsp;&nbsp;	}<br>
+			&nbsp;&nbsp;}<br>
+		&nbsp;&nbsp;}<br></p>
 		<h3>Main类</h3>
 		<p>public class Main {<br>
-			public static void main(String[] args) {<br>
-				Printable p = new PrinterProxy("dongyv");<br>
-				System.out.println("现在打印的是："+p.getPrinterName());<br>
-				p.setPrinterName("xia");<br>
-				System.out.println("现在打印的是："+p.getPrinterName());<br>
-				p.print("xiadongyv");<br>
-			}<br>
+			&nbsp;&nbsp;public static void main(String[] args) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Printable p = new PrinterProxy("dongyv");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	System.out.println("现在打印的是："+p.getPrinterName());<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	p.setPrinterName("xia");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	System.out.println("现在打印的是："+p.getPrinterName());<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	p.print("xiadongyv");<br>
+			&nbsp;&nbsp;}<br>
 		}<br></p>
 		<h3>输出结果</h3>
 		<p><img src="img/end.png" alt="图片2" ></img></p>
@@ -149,44 +149,44 @@
 		<p>
 		public class ProxyFactory{//创建动态代理对象动态代理不需要实现接口,但是需要指定接口类型<br>
 			//维护一个目标对象<br>
-			private Object target;<br>
-			public ProxyFactory(Object target){<br>
-				this.target=target;<br>
-			}<br>
+			&nbsp;&nbsp;private Object target;<br>
+			&nbsp;&nbsp;public ProxyFactory(Object target){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	this.target=target;<br>
+			&nbsp;&nbsp;}<br>
 
 		   //给目标对象生成代理对象<br>
-			public Object getProxyInstance(){<br>
-				return Proxy.newProxyInstance(
+			&nbsp;&nbsp;public Object getProxyInstance(){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	return Proxy.newProxyInstance(
 						target.getClass().getClassLoader(),
 						target.getClass().getInterfaces(),
 						new InvocationHandler() {<br>
-							@Override<br>
-							public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {<br>
-								System.out.println("开始事务2");<br>
+			&nbsp;&nbsp;				@Override<br>
+			&nbsp;&nbsp;				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					System.out.println("开始事务2");<br>
 								//执行目标对象方法，反射<br>
-								Object returnValue = method.invoke(target, args);<br>
-								System.out.println("提交事务2");<br>
-								return returnValue;<br>
-							}<br>
-						});<br>
-			}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					Object returnValue = method.invoke(target, args);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					System.out.println("提交事务2");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					return returnValue;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;				}<br>
+			&nbsp;&nbsp;			});<br>
+			&nbsp;&nbsp;}<br>
 		}<br>
 		</p>
 		<h3>Main类</h3>
 		<p> public static void main(String[] args) {<br>
 	        // 目标对象<br>
-	        Printable target = new Printer();<br>
+	        &nbsp;&nbsp;Printable target = new Printer();<br>
 	        // 【原始的类型 class cn.itcast.b_dynamic.UserDao】<br>
-	        System.out.println(target.getClass());<br>
+	        &nbsp;&nbsp;System.out.println(target.getClass());<br>
 
 	        // 给目标对象，创建代理对象<br>
-	        Printable proxy = (Printable) new ProxyFactory(target).getProxyInstance();<br>
+	        &nbsp;&nbsp;Printable proxy = (Printable) new ProxyFactory(target).getProxyInstance();<br>
 	        // class $Proxy0   内存中动态生成的代理对象<br>
-	        System.out.println(proxy.getClass());<br>
+	        &nbsp;&nbsp;System.out.println(proxy.getClass());<br>
 
 	        // 执行方法   【代理对象】<br>
-	        proxy.print("dongyu");<br>
-	    }<br></p>
+	        &nbsp;&nbsp;proxy.print("dongyu");<br>
+	    &nbsp;&nbsp;}<br></p>
 		<h3>输出结果</h3>
 		<p><img src="img/end1.png" alt="图片3" ></img></p>
 		<p>代理对象不需要实现接口,但是目标对象一定要实现接口,否则不能用动态代理。对应这个子类的实现方法，还有一个代理的方式叫做:Cglib代理。这里也不做阐述(持续学习中)。继续努力，加油。</p>
