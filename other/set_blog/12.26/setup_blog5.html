@@ -33,7 +33,7 @@
 		<h3>结构</h3>
 		<p>&nbsp;&nbsp;&nbsp;prototype模式是设计一个实例模板，以便于实例的复制。之后创建新的实例就不用再依赖于new关键字，实质是通过java中Cloneable接口中的clone方法创建实例的副本。</p>
 		<p><img src="img/simple.png" alt="图片1" width="700" /></p>
-		<p>说明客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
+		<p>说明:客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
 		<h3>Manager类</h3>
 		<p>public class Manager {<br>
 			private HashMap<Object, Object> showcase = new HashMap<>();<br>

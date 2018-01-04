@@ -35,14 +35,14 @@
 		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
 		<p>代理模式的关键点就在于，目标对象和代理对象都实现对象的接口，同时，目标对象是代理对象的拓展，目标函数需要代理函数进行实现。</p>
 		<h2>静态代理</h2>
-		<h3>Printable类</h3>
+		<h3>Printable类(目标对象和代理对象共同执行的类)</h3>
 		<p>public interface Printable {<br>
 			&nbsp;&nbsp;public abstract void setPrinterName(String name);//设置名字<br>
 			&nbsp;&nbsp;public abstract String getPrinterName();//获取名字<br>
 			&nbsp;&nbsp;public abstract void print(String string);//显示文字（打印）<br>
 		}<br>
 		</p>
-		<h3>Printer类</h3>
+		<h3>Printer类(目标对象类)</h3>
 		<p>public class Printer implements Printable{<br>
 			&nbsp;&nbsp;private String name;<br>
 			&nbsp;&nbsp;public Printer() {<br>
@@ -84,7 +84,7 @@
 			&nbsp;&nbsp;	return name;<br>
 			}<br>
 		}<br></p>
-		<h3>PrinterProxy类</h3>
+		<h3>PrinterProxy类(代理对象类)</h3>
 		<p>public class PrinterProxy implements Printable{<br>
 			&nbsp;&nbsp;private String name;//名字<br>
 			&nbsp;&nbsp;private Printer real;//本人<br>
@@ -124,7 +124,7 @@
 			&nbsp;&nbsp;	}<br>
 			&nbsp;&nbsp;}<br>
 		&nbsp;&nbsp;}<br></p>
-		<h3>Main类</h3>
+		<h3>Main类(测试类)</h3>
 		<p>public class Main {<br>
 			&nbsp;&nbsp;public static void main(String[] args) {<br>
 			&nbsp;&nbsp;&nbsp;&nbsp;	Printable p = new PrinterProxy("dongyv");<br>
