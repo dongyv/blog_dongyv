@@ -29,122 +29,44 @@
     <div class="about left">
 
     <ul> 
-		<h4 class="atitle"><span>2018-1-9</span>设计模式(五)————————Observer模式学习笔记</h4>
-		<h2>结构</h2>
-		<p>&nbsp;&nbsp;&nbsp;观察者模式中，一个目标物件管理所有相依于它的观察者物件，并且在它本身的状态改变时主动发出通知。<br>
-		同时，也会在观察者对象发生变化时，主动的通知观察者。以下示例类图:</p>
-		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
+		<h4 class="atitle"><span>2018-1-13</span>分布式初探</h4>
+		<h2>单机、集群、分布式</h2>
+
+		<p>单系统是应用程序、数据库、文件等资源都在同一台服务器上，例如LAMP系统，(Linux,Apache,MySQL,PHP)<br>
+		   分布式相当于一个业务分拆多个子业务，部署在不同的服务器上。<br>
+		   集群则是同一个业务，部署在多个服务器上。
+		   </p>
+		<p>网站的发展可以引入以下例子,为hsf(rpc框架,淘宝)毕玄写的。<br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;"一家小超市，一个收银员，同时兼着干着其他的事情，例如打扫、摆货。<br><br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;忙的时候收银员根本没有时间去打扫卫生，超市内有点脏，顾客受不了，于是增加了一个收银台，雇了一个收银员。<br><br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;随着顾客的增加，超市也经历过好几次的装修，由以前的一层变成俩层，这个时候做的事情就是不断的增加收银台，收银员和打扫卫生的人。<br><br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;在超市运转的过程中，老板发现一个现象，有些收银台排很长的队，有些收银台排的人不多，了解后知道是因为收银台太多了，顾客根本就看不到现在各个收银台的状况。对于这个现象，一种简单的方法就是继续加收银台。但一方面，超市没地方可加收银台了，作为老板，当然不需要雇太多的人，于是开始研究怎么让顾客了解到收银台的状况，简单地加了一个摄像头和大屏幕，大屏幕上显示目前收银台的状况，这样基本解决了这个问题。<br><br>
+			  &nbsp;&nbsp;&nbsp;&nbsp;排队长度差不多后，又出现了一个现象，就是有些收银速度明显比其他的慢，原因是排在这些收银的顾客买的东西特别的多，于是又想了一招，就是设立专门10件以下的通道，这样买东西比较少的顾客就不用排太长的队了，这一招施展之后，顾客的满意度明显上升，销售额也好了不少，后来就继续用这招应对团购状况、VIP状况。<br>	<br>
+			   &nbsp;&nbsp;&nbsp;&nbsp;在解决了上面的一些烦心事后，老板关注到了一个存在已久的现象，就是白天收银员很闲，晚上则很忙，于是从节省成本上考虑，决定实行部分元功能跟只在晚上上班的机制，白天则关闭一些收银台，顾客仍然可以通过大屏幕看到那些收银台是关闭的，避免走到没人的收银台去，实行这招之后，成本大大的降低了。"<br><br>
+		</p>
+		<p>构建网站:<li>集群化受限于调度、数据库、机房等。</li><li>涉及的主要按功能和数据库的不同拆分系统，因此会有高性能通讯框架、soa平台、消息中间件、分布式数据库产生。</li><li>负载均衡、缓存CDN、运行状况监测、功能降级等手段。以及成本控制</li></p>
+		<h2>rpc和注册中心</h2>
 		
-		<h2>代码实现</h2>
-		<h3>Observer类(观察接口类)</h3>
-		<p>
-		这个是观察者的接口，具体的观察者都会实现这个接口。同时，参数代表的是被观察者的对象。<br><br>
-		public interface Observer {<br>
-		&nbsp;&nbsp;	public abstract void update(NumberGenerator generator);<br>
-		}<br>
-		</p>
-		<h3>NumberGenerator类(被观察者类)</h3>
-		<p>
-		也是一个抽象类的方法，主要是为了之后能够拓展更多的被观察者，每个观察者和被观察者是多对一的关系。<br>此类中通过ArrayList实现了这个依赖。<br><br>
-		public abstract class NumberGenerator {<br>
-		&nbsp;&nbsp;	private ArrayList observers = new ArrayList<>();//保存的Observer们<br>
-		&nbsp;&nbsp;	public void addObserver(Observer observer){//注册Observer<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		observers.add(observer);<br>
-		&nbsp;&nbsp;	}<br>
-		&nbsp;&nbsp;	public void deleteObserver(Observer observer){//删除Observer<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		observers.remove(observer);<br>
-		&nbsp;&nbsp;	}<br>
-		&nbsp;&nbsp;	public void notifyObservers(){//向Observer发送通知<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = observers.iterator();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Observer o = (Observer)it.next();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			o.update(this);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
-		&nbsp;&nbsp;	}<br>
-			
-		&nbsp;&nbsp;	public abstract int getNumber();//获取数值<br>
-		&nbsp;&nbsp;	public abstract void execute();//生成数值<br>
-			
-		}<br>
-		</p>
-		<h3>RandomNumberGenerator类(被观察者实现类)</h3>
-		<p>
-		实现的是生成一个随机数，主要是在execute中实现通知观察者类这个操作。<br><br>
-		public class RandomNumberGenerator extends NumberGenerator{<br>
-		&nbsp;&nbsp;	private Random random = new Random();//随机生成器<br>
-		&nbsp;&nbsp;	private int number;//当前数值<br>
-		&nbsp;&nbsp;	@Override<br>
-		&nbsp;&nbsp;	public int getNumber() {//获得当前数值<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		return number;<br>
-		&nbsp;&nbsp;	}<br>
+		  rpc框架:
+			rpc与socket区别(https://www.cnblogs.com/leenuxqt/p/3202527.html)
+		  注册中心
+			eureka：spring cloud,
+			zookeeper：hadoop（学习路线:http://blog.csdn.net/it_man/article/details/14899905）
+		,dubbo基于zookeeper
+		
+		rpc注重的是点对点的发送，而注册中心也是基于rpc，仅仅是在A->B的过程中加了一个C。A->C->B。整个过程就是A通过代理传到注册中心，通过接口将值带入到客户端找到源方法，最后返回值原路返回。
 
-		&nbsp;&nbsp;	@Override<br>
-		&nbsp;&nbsp;	public void execute() {<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		for(int i=0;i<(20);i++){<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			number = random.nextInt(50);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			notifyObservers();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
-		&nbsp;&nbsp;	}<br>
+		服务治理
+			关于注册中心的发布/订阅功能。管理整个服务。(http://blog.csdn.net/suifeng3051/article/details/53992560) 服务的负载均衡，即随机分配最近的服务器。
 
-		}<br>
-		</p>
-		<h3>DigitObserver(观察者类的实现)</h3>
-		<p>
-		接受到通知后输出随机数。<br><br>
-		public class DigitObserver implements Observer{<br>
-		&nbsp;&nbsp;	public void update(NumberGenerator generator){<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("DigitObserver:"+generator.getNumber());<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		try{<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Thread.sleep(100);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		}catch (InterruptedException e) {<br>
-					
-		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
-		&nbsp;&nbsp;	}<br>
-		}<br>
+		soa与中间件
 
-		</p>
-		<h3>GraphObserver(观察者类的实现)</h3>
-		<p>
-		接受到通知后通过随机数输出。<br>
-		public class GraphObserver implements Observer{<br><br>
-	
-		&nbsp;&nbsp;	@Override<br>
-		&nbsp;&nbsp;	public void update(NumberGenerator generator) {<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.print("GraphObserver:");<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		int count = generator.getNumber();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		for(int i=0;i<(count);i++){<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			System.out.print("*");<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("");<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		try{<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Thread.sleep(100);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		}catch (InterruptedException e) {<br>
-					
-		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
-		&nbsp;&nbsp;	}<br>
+		分布式文件系统和缓存系统
 
-		}<br>
-		</p>
-		<h3>Main类(测试)</h3>
-		<p>
-		被观察者手动的发送通知给观察者<br><br>
-		public class Main {<br>
-		&nbsp;&nbsp;	public static void main(String[] args){<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		NumberGenerator generator = new RandomNumberGenerator();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		Observer observer1 = new DigitObserver();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		Observer observer2 = new GraphObserver();<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		generator.addObserver(observer1);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		generator.addObserver(observer2);<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;		generator.execute();<br>
-		&nbsp;&nbsp;	}<br>
-		}<br>
-		</p>
-		<h3>运行结果</h3>
-		<p><img src="img/observer.png" alt="图片3" width="700" /></p>
-		<p>上述示例中的观察者和被观察者都是通过抽象类的方式设计，为了方便拓展以后新的观察者和被观察者，有利于扩展。<br>
-		在实际应用中，此模式更多用于实现订阅功能的场景，例如微信好友的订阅(观察者)，当我们订阅了某个人(被观察者)的微信账号，当这个人发布了新的消息，我们就可以查看他的信息。首先是通过绑定新的好友到观察者集合中，最后在发送信息的时候让那些好友收到消息。<br></p>
-    <div class="keybq">
-	<p><span>关键字词</span>：设计模式、Observer、观察者、被观察者</p>    
+		CDN前端反向代理页面
+
+		数据库的分库，水平和垂直。
+	<p><span>关键字词</span>：分布式、cap </p>    
    
 <div class="gbko">
 <!--高速版-->
