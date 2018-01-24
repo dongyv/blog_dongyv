@@ -43,7 +43,7 @@
 		</p>
 		<h3>Entry类(结构实现)</h3>
 		<p>
-		跟组合模式的代码差不多就是多了实现Element方法，用于子类都能够添加具体的接受类。<br>
+		跟组合模式的代码差不多就是多了实现Element方法，用于子类都能够添加具体的接受类。<br><br>
 		public abstract class Entry implements Element{<br>
 		&nbsp;&nbsp;	public abstract String getName();//获得名字<br>
 		&nbsp;&nbsp;	public abstract int getSize();//获得大小<br>
@@ -56,6 +56,7 @@
 		</p>
 		<h3>Visitor类(访问者)</h3>
 		<p>
+		内置访问文件夹和访问文件的自定义方法。<br><br>
 		public abstract class Visitor {<br>
 		&nbsp;&nbsp;	public abstract void visit(File file);//访问文件<br>
 		&nbsp;&nbsp;	public abstract void visit(Directory directory);//访问文件夹<br>
@@ -63,7 +64,7 @@
 		</p>
 		<h3>ListVisitor类(访问实现类)</h3>
 		<p>
-		访问者在访问文件夹和文件的时候，对应有不一样的输出方式。<br><br>
+		访问者在访问文件夹和文件的时候，对应有不一样的输出方式。依赖于Entry类，如果访问被相信，那么就会调用自身的访问方法。<br><br>
 		public class ListVisitor extends Visitor{<br>
 		&nbsp;&nbsp;	private String currentdir = "";//当前访问的文件夹的名字<br>
 		&nbsp;&nbsp;	@Override<br>
@@ -88,6 +89,7 @@
 		</p>
 		<h3>Directory类(访问文件夹类)</h3>
 		<p>
+		依赖于Visitor类，如果相信访问者那么就会接受访问者的所有信息，允许访问当前的文件夹。<br><br>
 		public class Directory extends Entry{<br>
 		&nbsp;&nbsp;	private String name;//文件夹名字<br>
 		&nbsp;&nbsp;	private ArrayList directory =new ArrayList<>();//文件夹中目录条目的集合<br>
@@ -128,6 +130,7 @@
 		</p>
 		<h3>File类(访问文件类)</h3>
 		<p>
+		依赖于Visitor类，如果相信访问者那么就会接受访问者的所有信息，允许访问当前的文件。<br><br>
 		public class File extends Entry{<br>
 		&nbsp;&nbsp;	private String name;<br>
 		&nbsp;&nbsp;	private int size;<br>
