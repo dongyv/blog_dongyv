@@ -36,100 +36,100 @@
 		<p>说明:客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
 		<h3>Manager类</h3>
 		<p>public class Manager {<br>
-			private HashMap<Object, Object> showcase = new HashMap<>();<br>
-			public void register(String name,Product poto) {//注册对象<br>
-				showcase.put(name, poto);<br>
-			}<br>
-			public Product create(String potoname) {<br>
-				Product p = (Product)showcase.get(potoname);<br>
-				return p.createClone();//返回 对应子类 对象的实例<br>
-			}<br>
+		&nbsp;&nbsp;private HashMap<Object, Object> showcase = new HashMap<>();<br>
+		&nbsp;&nbsp;public void register(String name,Product poto) {//注册对象<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;showcase.put(name, poto);<br>
+		&nbsp;&nbsp;}<br>
+		&nbsp;&nbsp;public Product create(String potoname) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Product p = (Product)showcase.get(potoname);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;return p.createClone();//返回 对应子类 对象的实例<br>
+		&nbsp;&nbsp;}<br>
 		}<br>
 </p>
 		<h3>Product类</h3>
 		<p>public interface Product extends Cloneable{<br>
-		   public abstract void use(String s);//实例的使用方法<br>
-			public abstract Product createClone();//生成副本方法<br>
+		   &nbsp;&nbsp;public abstract void use(String s);//实例的使用方法<br>
+		&nbsp;&nbsp;public abstract Product createClone();//生成副本方法<br>
 		}<br>
 		</p>
 		<h3>UderlinePen类</h3>
 		<p>public class UnderlinePen implements Product{<br>
-				private char ulchar;<br>
-				public UnderlinePen(char ulchar) {<br>
-					this.ulchar = ulchar;<br>
-				}<br>
-				@Override<br>
-				public void use(String s) {<br>
-					int length = s.getBytes().length;<br>
-					System.out.println("\""+s+"\"");<br>
-					System.out.print("");<br>
-					for(int i=0;i<(length+4);i++) {<br>
-						System.out.print(ulchar);<br>
-					}<br>
-					System.out.println("");<br>
-				}<br>
+			&nbsp;&nbsp;private char ulchar;<br>
+			&nbsp;&nbsp;public UnderlinePen(char ulchar) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;this.ulchar = ulchar;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void use(String s) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int length = s.getBytes().length;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("\""+s+"\"");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.print("");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(ulchar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("");<br>
+			&nbsp;&nbsp;}<br>
 
-				@Override<br>
-				public Product createClone() {<br>
-					Product p = null;<br>
-					try {<br>
-						p=(Product)clone();<br>
-					}catch (CloneNotSupportedException e) {<br>
-						// TODO: handle exception<br>
-						e.printStackTrace();<br>
-					}<br>
-					return p;<br>
-				}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public Product createClone() {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;Product p = null;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=(Product)clone();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}catch (CloneNotSupportedException e) {<br>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return p;<br>
+			&nbsp;&nbsp;}<br>
 			}<br></p>
 		<h3>MessageBox类</h3>
 		<p>public class MessageBox implements Product{<br>
-				private char decochar;<br>
-				public MessageBox(char decochar) {<br>
-					this.decochar = decochar;<br>
-				}<br>
-				@Override<br>
-				public void use(String s) {<br>
-					int length = s.getBytes().length;<br>
-					for(int i=0;i<=(length+4);i++) {<br>
-						System.out.print(decochar);<br>
-					}<br>
-					System.out.println(" ");<br>
-					System.out.println(decochar+ " " + s + " " + decochar);<br>
-					for(int i=0;i<length+4;i++) {<br>
-						System.out.print(decochar);<br>
-					}<br>
-					System.out.println("");<br>
-				}<br>
-				@Override<br>
-				public Product createClone() {<br>
-					Product p = null;<br>
-					try {<br>
-						p=(Product)clone();<br>
-					}catch (CloneNotSupportedException e) {<br>
-						// TODO: handle exception<br>
-						e.printStackTrace();<br>
-					}<br>
-					return p;<br>
-				}<br>
+			&nbsp;&nbsp;private char decochar;<br>
+			&nbsp;&nbsp;public MessageBox(char decochar) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;this.decochar = decochar;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void use(String s) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int length = s.getBytes().length;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<=(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(" ");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(decochar+ " " + s + " " + decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("");<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public Product createClone() {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;Product p = null;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=(Product)clone();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}catch (CloneNotSupportedException e) {<br>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return p;<br>
+			&nbsp;&nbsp;}<br>
 			}<br></p>
 		<h3>Main类</h3>
 		<p>public static void main(String[] args) {<br>
-			//准备<br>
-			Manager manager = new Manager();<br>
-			UnderlinePen upen = new UnderlinePen('~');<br>
-			MessageBox mbox = new MessageBox('*');<br>
-			MessageBox sbox = new MessageBox('/');<br>
-			manager.register("strong message", upen);//将对象和键id注册到manager中管理<br>
-			manager.register("warning box", mbox);<br>
-			manager.register("slash box", sbox);<br>
+			&nbsp;&nbsp;//准备<br>
+			&nbsp;&nbsp;Manager manager = new Manager();<br>
+			&nbsp;&nbsp;UnderlinePen upen = new UnderlinePen('~');<br>
+			&nbsp;&nbsp;MessageBox mbox = new MessageBox('*');<br>
+			&nbsp;&nbsp;MessageBox sbox = new MessageBox('/');<br>
+			&nbsp;&nbsp;manager.register("strong message", upen);//将对象和键id注册到manager中管理<br>
+			&nbsp;&nbsp;manager.register("warning box", mbox);<br>
+			&nbsp;&nbsp;manager.register("slash box", sbox);<br>
 			
-			//生成<br>
-			Product p1 = manager.create("strong message");//通过对应的key进行创建子类<br>
-			p1.use("1:Hello,word.");//实现子类的调用<br>
-			Product p2 = manager.create("warning box");<br>
-			p2.use("2:Hello,word.");<br>
-			Product p3 = manager.create("slash box");<br>
-			p3.use("3:Hello,word.");<br>
+			&nbsp;&nbsp;//生成<br>
+			&nbsp;&nbsp;Product p1 = manager.create("strong message");//通过对应的key进行创建子类<br>
+			&nbsp;&nbsp;p1.use("1:Hello,word.");//实现子类的调用<br>
+			&nbsp;&nbsp;Product p2 = manager.create("warning box");<br>
+			&nbsp;&nbsp;p2.use("2:Hello,word.");<br>
+			&nbsp;&nbsp;Product p3 = manager.create("slash box");<br>
+			&nbsp;&nbsp;p3.use("3:Hello,word.");<br>
 		}<br></p>
 		<h3>输出结果</h3>
 		<p><img src="img/end.png" alt="图片2" ></img></p>
