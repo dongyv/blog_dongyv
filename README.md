@@ -1,3 +1,3 @@
 # blog_dongyv
-#http://www.dongyv.com
-#github托管服务器+html+git
+博客地址:http://www.dongyv.com<br>
+github托管服务器+html+git
