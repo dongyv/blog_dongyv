@@ -31,7 +31,8 @@
     <ul> 
 		<h4 class="atitle"><span>2018-1-9</span>设计模式(七)————————Iterator模式学习笔记</h4>
 		<h2>结构</h2>
-		<p>&nbsp;&nbsp;&nbsp;迭代器模式用于数组集合中按照顺序来遍历集合，方便输出。以下示例类图:</p>
+		<p>&nbsp;&nbsp;&nbsp;迭代器模式用于数组集合中按照顺序来遍历集合，方便输出。效果跟for的使用方式差不多，此方法就相当于指针，通过next方法指向下一个对象。<br><br>
+		以下示例类图:</p>
 		<p><img src="img/Iterator.png" alt="图片2" width="700" /></p>
 		<p>
 		Iterator:迭代器接口，主要是定义了hasNext和next俩个方法。<br>
@@ -145,7 +146,7 @@
 		<h3>运行结果</h3>
 		<p><img src="img/iterator1.png" alt="图片3" width="700" /></p>
 		<p>
-		上述迭代器的具体实现是通过Iterator的hasNext和next方法，不依赖于具体实现(BookShelfIterator类)，方便于拓展和自定义规则。这样也可以理解为什么，在BookShelfIterator类中的iterator方法中返回的是Iterator。
+		上述迭代器的具体实现是通过Iterator的hasNext和next方法，不依赖于具体实现(BookShelfIterator类)，方便于拓展和自定义规则。这样也可以理解,为什么在BookShelfIterator类中的iterator方法中返回的是Iterator。<br>
 		</p>
 		
     <div class="keybq">
