@@ -2,13 +2,13 @@ $(function(){
 	var pageNum = 0;
 
 	for (var i = 0; i < $('.runPage').length; i++) {
-		$('.runPage').eq(i).css('z-index',7-2*i);
-		$('.runPage').eq(i).children('div').css('z-index',7-2*i);
-		$('.runPage').eq(i).children('img').css('z-index',6-2*i);
+		$('.runPage').eq(i).css('z-index',9-2*i);
+		$('.runPage').eq(i).children('div').css('z-index',9-2*i);
+		$('.runPage').eq(i).children('img').css('z-index',8-2*i);
 	};
 
 	$('.nextBtn').bind('click',function(){
-			if ( pageNum <= 2 ) {
+			if ( pageNum <= 3 ) {
 				runNext(pageNum);
 			pageNum++;
 			};
@@ -22,14 +22,14 @@ $(function(){
 
 	function zIndexNext(index,element){
 		if ( index >= 1 ) {
-			element.css('z-index',3+2*index);
+			element.css('z-index',5+2*index);
 		};	
 		setTimeout(function(){
 			if (index==0) {
-				element.css('z-index',3+2*index);
+				element.css('z-index',5+2*index);
 			};
-			element.children('div').css('z-index',2+2*index);
-			element.children('img').css('z-index',3+2*index);		
+			element.children('div').css('z-index',4+2*index);
+			element.children('img').css('z-index',5+2*index);		
 		},1000);
 	}
 
@@ -48,12 +48,12 @@ $(function(){
 
 	function zIndexLast(index,element){
 		if (index == 0) {
-			element.css('z-index',7-2*index);
+			element.css('z-index',9-2*index);
 		};
 		setTimeout(function(){
-			element.css('z-index',7-2*index);
-			element.children('div').css('z-index',7-2*index);
-			element.children('img').css('z-index',6-2*index);		
+			element.css('z-index',9-2*index);
+			element.children('div').css('z-index',9-2*index);
+			element.children('img').css('z-index',8-2*index);		
 		},1000);
 	}
 });
