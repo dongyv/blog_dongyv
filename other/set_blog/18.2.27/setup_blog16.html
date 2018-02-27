@@ -30,7 +30,7 @@
 
     <ul> 
 		<h4 class="atitle"><span>2018-2-27</span>通信————nio,aio,bio</h4>
-		<h1>网络概述</h1><br>
+		<h2>网络概述</h2><br>
 		<p>Socket又称“套接字”，应用程序通常通过“套接字”向网络发出请求或应答网络请求。<br>
 		Socket和ServerSocket类库位于java.net包中。ServerSocket用于服务器端，Socket是建立网络连接时使用的。在连接成功时，应用程序两端都会产生一个Socket实例，操作这个实例，完成所需的会话。对于一个网络连接来说，套接字是平等的，不会因为在服务器端或在客户端而产生不同的级别。不管是ServerSocket还是Socket，它们的工作都是通过SocketImpl类及其子类完成的。<br><br>
 		套接字的连接过程可以分为四个步骤：服务器监听、客户端请求服务器、服务器端连接确认、客户端连接确认并进行通信。<br>
@@ -42,7 +42,7 @@
 		<img src="img/wangluo.jpg" />
 		</p>
 		<p><br>
-		Socket通信步骤：<br>
+		Socket通信步骤(BIO——Blocking I/O)：<br>
 		①创建ServerSocket和Socket<br>
 		②打开连接到Socket的输入/输出流<br>
 		③按照协议对Socket进行读写操作<br>
@@ -59,9 +59,31 @@
 		③通过输入流获取服务器响应信息<br>
 		④关闭响应资源<br>
 		</p>
-		<h1>BIO（Blocking I/O）同步阻塞I/O</h1>
-		<p>&nbsp;&nbsp;</p>
-		
+		<h2>NIO</h2>
+		<p>&nbsp;&nbsp;NIO(None-Blocking I/O)同步非阻塞I/O，主要由三个核心部分组成:Channel(通道)，Buffer(缓冲区), Selector(选择器)。传统IO基于字节流和字符流进行操作，而NIO基于Channel和Buffer(缓冲区)进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中。Selector(选择区)用于监听多个通道的事件（比如：连接打开，数据到达）。因此，单个线程可以监听多个数据通道。<br>
+
+		NIO和传统IO之间第一个最大的区别是，IO是面向流的，NIO是面向缓冲区的。<br></p>
+		<h3>channel</h3><br>
+		<p>&nbsp;&nbsp;传统的IO客户端和服务器的通信主要是基于stream(流)，只不过是单向的，例如:InputStream, OutputStream。而channel是双向的，可以读也可以写。<br>
+		NIO中channel有ServerSocketChannel，SocketChannel等等。<br>
+		通道完成后还需要选择器进行俩者的通信。
+		</p>
+		<h3>selector</h3><br>
+		<p>
+		Selector运行单线程处理多个Channel，如果你的应用打开了多个通道，但每个连接的流量都很低，使用Selector就会很方便。<br>
+		<img src="img/selector.png"/>
+		这个方法会一直阻塞到某个注册的通道有事件就绪。一旦这个方法返回，线程就可以处理这些事件，事件的例子有如新的连接进来、数据接收等。<br>
+		每次向选择器注册通道时就会创建一个选择键(selectionKey)，注册完成后就会在另一端的select()方法之后执行对应的选择键的操作。代码如下:
+		&nbsp;&nbsp;&nbsp;&nbsp;Set<SelectionKey> keys = selector.selectedKeys();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Iterator<SelectionKey> it = keys.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;it.remove();//标记当前键为已经使用<br>
+		<br>
+		<h3>Buffer</h3>
+		<p>NIO中的关键Buffer实现有：ByteBuffer, CharBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer，分别对应基本数据类型: byte, char, double, float, int, long, short。</p>
+		</p>
+		<h3>感谢:</h3>
+		<a href="http://www.importnew.com/19816.html">http://www.importnew.com/19816.html</a>
+		<a href="https://baijiahao.baidu.com/s?id=1573998393898438&wfr=spider&for=pc">https://baijiahao.baidu.com/s?id=1573998393898438&wfr=spider&for=pc</a>
     <div class="keybq">
 	<p><span>关键字词: 流 </span></p>    
    
