@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2018-2-27</span>通信————nio,aio,bio</h4>
+		<h1>网络概述</h1><br>
+		<p>Socket又称“套接字”，应用程序通常通过“套接字”向网络发出请求或应答网络请求。<br>
+		Socket和ServerSocket类库位于java.net包中。ServerSocket用于服务器端，Socket是建立网络连接时使用的。在连接成功时，应用程序两端都会产生一个Socket实例，操作这个实例，完成所需的会话。对于一个网络连接来说，套接字是平等的，不会因为在服务器端或在客户端而产生不同的级别。不管是ServerSocket还是Socket，它们的工作都是通过SocketImpl类及其子类完成的。<br><br>
+		套接字的连接过程可以分为四个步骤：服务器监听、客户端请求服务器、服务器端连接确认、客户端连接确认并进行通信。<br>
+		（1）服务器监听：服务器端套接字并不定位具体的客户端套接字，而是出于等待连接的状态，实时监控网络状态。<br>
+		（2）客户端请求：客户端的套接字提出连接请求，要连接的目标是服务器端的套接字。为此，客户端的套接字必须首先描述要连接的服务器端的套接字，指出服务器端的套接字的地址和端口号，然后向服务器端套接字提出连接请求。<br>
+		（3）服务器端连接确认：当服务器端的套接字监听到或者说接收到客户端套接字的连接请求，它就响应客户端套接字的请求，建立一个新的线程，把服务器端套接字的描述发送给客户端。<br>
+		（4）客户端连接确认：一旦客户端确认了此描述，连接就建立好了，双方开始通信。而服务器端套接字继续处于监听状态，继续接收其他客户端套接字的连接请求。<br>
+		借用一下网上的Socket通信模型图片：<br><br>
+		<img src="img/wangluo.jpg" />
+		</p>
+		<p><br>
+		Socket通信步骤：<br>
+		①创建ServerSocket和Socket<br>
+		②打开连接到Socket的输入/输出流<br>
+		③按照协议对Socket进行读写操作<br>
+		④关闭输入输出流、关闭Socket<br><br>
+		服务器端：<br>
+		①创建ServerSocket对象，绑定监听端口<br>
+		②通过accept()方法监听客户端请求<br>
+		③建立连接后，通过输入流读取客户端发送的请求信息<br>
+		④通过输出流向客户端发送响应信息<br>
+		⑤关闭相关资源<br><br>
+		客户端：<br>
+		①创建Socket对象，指明需要连接的服务器的地址和端口号<br>
+		②连接建立后，通过输出流向服务器端发送请求信息<br>
+		③通过输入流获取服务器响应信息<br>
+		④关闭响应资源<br>
+		</p>
+		<h1>BIO（Blocking I/O）同步阻塞I/O</h1>
+		<p>&nbsp;&nbsp;</p>
+		
+    <div class="keybq">
+	<p><span>关键字词: 流 </span></p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>
