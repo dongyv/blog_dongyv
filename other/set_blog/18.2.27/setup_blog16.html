@@ -62,7 +62,7 @@
 		<h2>NIO</h2>
 		<p>&nbsp;&nbsp;NIO(None-Blocking I/O)同步非阻塞I/O，主要由三个核心部分组成:Channel(通道)，Buffer(缓冲区), Selector(选择器)。传统IO基于字节流和字符流进行操作，而NIO基于Channel和Buffer(缓冲区)进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中。Selector(选择区)用于监听多个通道的事件（比如：连接打开，数据到达）。因此，单个线程可以监听多个数据通道。<br>
 
-		NIO和传统IO之间第一个最大的区别是，IO是面向流的，NIO是面向缓冲区的。<br></p>
+		NIO和传统IO之间第一个最大的区别是，IO是面向流的，NIO是面向缓冲区的，即NIO是双向通道（channel）进行数据传输，而不像BIO是单向的流（stream)进行传输的。<br></p>
 		<h3>channel</h3><br>
 		<p>&nbsp;&nbsp;传统的IO客户端和服务器的通信主要是基于stream(流)，只不过是单向的，例如:InputStream, OutputStream。而channel是双向的，可以读也可以写。<br>
 		NIO中channel有ServerSocketChannel，SocketChannel等等。<br>
