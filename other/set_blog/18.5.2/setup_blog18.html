@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+
+    <div class="about left">
+
+    <ul>
+		<h4 class="atitle"><span>2018-5-2</span>HashMap源码</h4>
+    <h2>HashMap简介</h2>
+		<p>&nbsp;&nbsp;HashMap是基于哈希表实现的即数据和链表，每一个元素是一个key-value对，其内部通过单链表解决hash冲突问题，容量不足（超过了阀值）时，数组会发生一次扩容。<br>
+      &nbsp;&nbsp;结构如下<br>
+    <img src="img/HashMap.jpg"/></p>
+    <h3>Node节点</h3>
+    <p>内部类的定义方式:<br>static class Node<K,V> implements Map.Entry<K,V><br>
+    内有四个属性<br>
+    final int hash;对应每个节点的hash值<br>
+    final K key;<br>
+    V value;<br>
+    Node<K,V> next;链表的下一个节点<br>
+    </p>
+
+    <h2>HashMap源码分析</h2>
+    <h3>put方法</h3>
+    <p>
+    public V put(K key, V value) {<br>
+    &nbsp;&nbsp;return putVal(hash(key), key, value, false, true);<br>
+  }<br><br>
+    putVal方法<br><br>
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {<br>
+        &nbsp;&nbsp;Node<K,V>[] tab;//节点数组<br>
+        &nbsp;&nbsp;Node<K,V> p; int n, i;<br>
+        &nbsp;&nbsp;if ((tab = table) == null || (n = tab.length) == 0)//判断是不是初始化的数据，如果是默认一个大小<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;n = (tab = resize()).length;<br>
+        &nbsp;&nbsp;if ((p = tab[i = (n - 1) & hash]) == null)//判断当前节点中的值是不是为空，如果没有值那么就创建一个节点添加进去<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;tab[i] = newNode(hash, key, value, null);<br>
+        &nbsp;&nbsp;else {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Node<K,V> e; K k;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;if (p.hash == hash &&
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((k = p.key) == key || (key != null && key.equals(k))))//判断hash值和key值是否完全相等<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e = p;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;else if (p instanceof TreeNode)//判断是否为红黑树节点<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;else {//链表<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int binCount = 0; ; ++binCount) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ((e = p.next) == null) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p.next = newNode(hash, key, value, null);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;treeifyBin(tab, hash);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (e.hash == hash &&<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((k = e.key) == key || (key != null && key.equals(k))))<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;if (e != null) { //put方法返回该节点的中的旧值。<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;V oldValue = e.value;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;if (!onlyIfAbsent || oldValue == null)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.value = value;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;afterNodeAccess(e);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return oldValue;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;++modCount;<br>
+        &nbsp;&nbsp;if (++size > threshold)//如果当前大小大于临界点，扩容。<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;resize();<br>
+        &nbsp;&nbsp;afterNodeInsertion(evict);<br><br>
+        &nbsp;&nbsp;return null;<br>
+    }<br><br><p>
+    <h3>resize扩容</h3>
+    <p><br><br>
+    final Node<K,V>[] resize() {<br>
+        &nbsp;&nbsp;Node<K,V>[] oldTab = table;<br>
+        &nbsp;&nbsp;int oldCap = (oldTab == null) ? 0 : oldTab.length;<br>
+        &nbsp;&nbsp;int oldThr = threshold;//阀值<br>
+        &nbsp;&nbsp;int newCap, newThr = 0;<br>
+        &nbsp;&nbsp;if (oldCap > 0) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    if (oldCap >= MAXIMUM_CAPACITY) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        threshold = Integer.MAX_VALUE;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        return oldTab;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+        &nbsp;&nbsp;    else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+        &nbsp;&nbsp;&nbsp;&nbsp;             oldCap >= DEFAULT_INITIAL_CAPACITY)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;        newThr = oldThr << 1; //扩充为原来的俩倍<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;else if (oldThr > 0)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    newCap = oldThr;<br>
+        &nbsp;&nbsp;else { //HashMap初始化时候的大小<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    newCap = DEFAULT_INITIAL_CAPACITY;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);//阀值=大小*加载因子<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;if (newThr == 0) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    float ft = (float)newCap * loadFactor;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;threshold = newThr;<br>
+        &nbsp;&nbsp;@SuppressWarnings({"rawtypes","unchecked"})<br>
+        &nbsp;&nbsp;Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];//开辟一个内存空间创建一个新的数组，数组大小为第一次扩充后的大小。<br>
+        &nbsp;&nbsp;table = newTab;<br>
+        &nbsp;&nbsp;if (oldTab != null) {//扩充之后 把原来的结构转移到新的数据结构中<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    for (int j = 0; j < oldCap; ++j) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        Node<K,V> e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        if ((e = oldTab[j]) != null) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            oldTab[j] = null;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            if (e.next == null)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                newTab[e.hash & (newCap - 1)] = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            else if (e instanceof TreeNode)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            else { // preserve order<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                Node<K,V> loHead = null, loTail = null;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                Node<K,V> hiHead = null, hiTail = null;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                Node<K,V> next;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                do {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    next = e.next;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    if ((e.hash & oldCap) == 0) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        if (loTail == null)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            loHead = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        else<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            loTail.next = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        loTail = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    else {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        if (hiTail == null)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            hiHead = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        else<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            hiTail.next = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                        hiTail = e;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                } while ((e = next) != null);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                if (loTail != null) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                  loTail.next = null;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    newTab[j] = loHead;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                if (hiTail != null) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    hiTail.next = null;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    newTab[j + oldCap] = hiHead;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;return newTab;<br>
+    }<br>
+    </p>
+    <br>
+    <h3>get方法：根据对应的key的hash值找到相应的值</h3>
+    <p>public V get(Object key) {<br>
+    &nbsp;&nbsp;    Node<K,V> e;<br>
+    &nbsp;&nbsp;    return (e = getNode(hash(key), key)) == null ? null : e.value;<br><br>
+    }<br><br>
+    具体的实现方法是getNode方法<br>
+    final Node<K,V> getNode(int hash, Object key) {<br>
+    &nbsp;&nbsp;    Node<K,V>[] tab; Node<K,V> first, e; int n; K k;<br>
+    &nbsp;&nbsp;    if ((tab = table) != null && (n = tab.length) > 0 &&<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;        (first = tab[(n - 1) & hash]) != null) {<br>
+    &nbsp;&nbsp;        if (first.hash == hash && // always check first node
+    &nbsp;&nbsp;&nbsp;&nbsp;          ((k = first.key) == key || (key != null && key.equals(k)))<br>)
+    &nbsp;&nbsp;&nbsp;&nbsp;          return first;<br>
+    &nbsp;&nbsp;      if ((e = first.next) != null) {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;            if (first instanceof TreeNode)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                return ((TreeNode<K,V>)first).getTreeNode(hash, key);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;            do {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                if (e.hash == hash &&
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    ((k = e.key) == key || (key != null && key.equals(k))))<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    return e;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            } while ((e = e.next) != null);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;      }<br>
+    &nbsp;&nbsp;    }<br>
+    &nbsp;&nbsp;    return null;<br>
+    }<br></p>
+    <h2>总结</h2>
+    <p>&nbsp;&nbsp;本文讲述了HashMap的put方法和get方法，以及提及HashMap扩容时候的操作。还有一些例如红黑树，位运算定位到具体的下标，JDK1.8以下版本在并发过程中成环等等操作没有提及，红黑树目前也了解个大概，仍需继续学习。</p>
+    <p>&nbsp;&nbsp;</p>
+    <div class="keybq">
+	<p><span>关键字词: HashMap源码 </span></p>
+
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>
