@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+
+    <div class="about left">
+
+    <ul>
+		<h4 class="atitle"><span>2018-11-13</span>动态代理那些事儿，含源码解析</h4>
+
+		<h2>代理</h2>
+		<h3>什么是代理：</h3><br>
+		&nbsp;&nbsp;通俗的来说，无须事必躬亲。需要做什么事情，交代他人进行完成，我们只验收结果。生活中常见的例子就是中介，中介很好的帮我们处理了代办的任务，我们只需要对中介完成的任务进行接收以及支付相应的报酬即可。代理模式的设计图如下：<br><br>
+    <img src="img/proxy.png"/><br>
+    <h3>什么是动态代理:</h3><br>
+	  &nbsp;&nbsp;动态代理，利用Java的反射技术，在运行时创建一个实现某些给定接口的新类（也称“动态代理类”）及其实例（对象）。代理的是接口，不是类，更不是抽象类。<br><br>
+    <h2>动态代理实现过程</h2>
+    <h3>原理及实现方式</h3><br>
+    &nbsp;&nbsp;动态代理运用的是多态和反射。根据接口和类加载器动态生成字节码。动态代理的方法最主要俩个步骤，生成字节码文件，加载字节码到JVM中，再反射这个代理文件。<br><br>
+    <h3>源码分析</h3><br>
+    动态代理入口方法<br>
+    public static Object newProxyInstance(ClassLoader loader,Class<?>[] interfaces,InvocationHandler h)<br>
+    Proxy.newProxyInstance()方法有三个参数：<br>
+    1. 类加载器<br>
+    2. 需要实现的接口数组<br>
+    3. InvocationHandler接口。所有动态代理类的方法调用，都会交由InvocationHandler接口实现类里的invoke()方法去处理。这是动态代理具体的逻辑实现。<br><br>
+    <h3>newProxyInstance源码</h3><br>
+    //生产代理类的class文件<br>
+    Class<?> cl = getProxyClass0(loader, intfs);<br>
+    //获取代理类的构造方法<br>
+    final Constructor<?> cons = cl.getConstructor(constructorParams);<br>
+    final InvocationHandler ih = h;<br>
+    //初始化类(反射)<br>
+    return cons.newInstance(new Object[]{h});<br><br>
+    &nbsp;&nbsp;以上是动态代理大体的实现逻辑，首先是通过getProxyClass0方法生成代理类，其次是通过反射返回这个代理类的具体实例。如上可以发现，cons.newInstance(new Object[]{h})，生成实例时传了InvocationHandler的对象。作用后文会阐述。<br><br>
+    <h3>getProxyClass0的关键源码</h3><br>
+    return proxyClassCache.get(loader, interfaces);<br><br>
+    首先查看proxyClassCache这个对象是什么，做了什么。在Proxy中可以找到。<br>
+    private static final WeakCache<ClassLoader, Class<?>[], Class<?>> proxyClassCache = new WeakCache<>(new KeyFactory(), new ProxyClassFactory());<br>
+    看起来是创建了俩个工厂类的实例，现在不知道作用，先放着等会再看。<br><br>
+    <h3>proxyClassCache.get关键源码</h3><br>
+    //从一级缓存类加载器中查找代理文件<br>
+    ConcurrentMap<Object, Supplier<V>> valuesMap = map.get(cacheKey);<br>
+    if (valuesMap == null) {<br>
+      ConcurrentMap<Object, Supplier<V>> oldValuesMap = map.putIfAbsent(cacheKey,valuesMap = new ConcurrentHashMap<>());<br>
+      if (oldValuesMap != null) {valuesMap = oldValuesMap;}<br>
+    }<br>
+
+    Object subKey = Objects.requireNonNull(subKeyFactory.apply(key, parameter));<br>
+    Supplier<V> supplier = valuesMap.get(subKey);<br>
+    Factory factory = null;<br>
+    //获取二级缓存是否存在已生成的文件<br>
+    V value = supplier.get();<br>
+    if (factory == null) {<br>
+    factory = new Factory(key, parameter, subKey, valuesMap);<br>
+    //将生成的代理文件保存至二级缓存中<br>
+    supplier = valuesMap.putIfAbsent(subKey, factory);<br><br>
+
+    private final ConcurrentMap<Object, ConcurrentMap<Object, Supplier<V>>> map = new ConcurrentHashMap<>();<br>
+    通过二级缓存用来存储代理类的class文件，先是通过类加载器进行选择，找到当前加载器下的所有文件，即cacheKey。再通过subKeyFactory.apply(key, parameter) 方式来找到subkey，用来读取该类下的代理类的class文件。apply方法是一个接口方法，如何查看？首先我们查看一下这个subKeyFactory何时被引用的。<br>
+    public WeakCache(BiFunction<K, P, ?> subKeyFactory,BiFunction<K, P, V> valueFactory) {<br>
+      this.subKeyFactory = Objects.requireNonNull(subKeyFactory);<br>
+      this.valueFactory = Objects.requireNonNull(valueFactory);<br>
+    }<br>
+    在获取proxyClassCache对象的时候，subKeyFactory和valueFactory就被当参数传进来了，是不是很熟悉，刚刚搁着的俩个工厂，现在正好可以匹配，所以这个流程是在准备获取拉取缓存对象，已经创建生成键的工厂和生成代理类的工厂。<br><br>
+    <h3>keyFactory关键代码</h3><br>
+    public Object apply(ClassLoader classLoader, Class<?>[] interfaces) {<br>
+    switch (interfaces.length) {<br>
+    case 1: return new Key1(interfaces[0]); // the most frequent<br>
+    case 2: return new Key2(interfaces[0], interfaces[1]);<br>
+    case 0: return key0;<br>
+    default: return new KeyX(interfaces);<br>
+    以上的作用是根据接口的个数创建键，返回对应的键。往下，获取到subkey之后，查看supplier.get这个方法。<br><br>
+    <h3>supplier.get关键代码</h3><br>
+    valueFactory.apply(key, parameter)<br><br>
+    <h3>valueFactor关键代码y</h3><br>
+    //生成class文件的方法<br>
+    byte[] proxyClassFile = ProxyGenerator.generateProxyClass(proxyName, interfaces, accessFlags);<br><br>
+    这个方法会加载类中的构造方法，方法属性。按照class文件的规律拼接而成class文件。细节可以参考:<br>
+    <a target="_blank" href="https://www.cnblogs.com/liuyun1995/p/8144706.html"><u>https://www.cnblogs.com/liuyun1995/p/8144706.html</u></a><br><br>
+    下面，我们通过反编译这个class文件来查看，这个代理类具体做了什么工作。我这里使用的是jd-gui进行反编译的，筛选其中的关键部分。<br>
+    jd-gui安装:<a href="https://pan.baidu.com/s/1dywi4h28hwYbWhT4i-g8Xw" target="_blank"><u>https://pan.baidu.com/s/1dywi4h28hwYbWhT4i-g8Xw </u></a>提取码: xqwr <br>
+    static{<br>
+      m3 = Class.forName("com.collection.web.api.rpc.HelloService").getMethod("Hello", new Class[] { Class.forName("java.lang.String") });<br>
+    }<br>
+    public final String Hello(String paramString)<br>
+    return (String)this.h.invoke(this, m3, new Object[] { paramString });<br>
+    很明显了，newProxyInstance的返回值是cons.newInstance(new Object[]{h}),这也是刚刚遗留下来的问题，传入这个调度处理器(h),为的是能够在代理具体的方法invoke。<br><br>
+    <h2>总结</h2>
+    &nbsp;&nbsp;动态代理的注意点，必须是要有接口的存在。 学习此章节后，可以对应联想到Spring中的aop模式，其除了通过JDKProxy实现外，还通过CGlib实现动态代理。后者用CGLib生成的代理类重写了父类的各个方法，往后也应学习。<br>
+    &nbsp;&nbsp;最后，提个建议，源码看着是挺累，例如SpringMVC，Tomcat等等，可以先去看其类图或者架构图的实现，在根据对应的组件及其对应的功能进行查看，定能事半功倍。聪明的你们，你们说呐?
+    </p>
+
+    <div class="keybq">
+	<p><span>关键字词: 认知 </span></p>
+
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>
